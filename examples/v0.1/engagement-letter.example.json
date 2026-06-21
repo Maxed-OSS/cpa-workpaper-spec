@@ -1,0 +1,36 @@
+{
+  "specVersion": "0.1",
+  "id": "el_acme_2026",
+  "clientId": "cli_acme",
+  "track": "bookkeeping",
+  "effectiveDate": "2026-01-01",
+  "scope": {
+    "servicesIncluded": [
+      "Monthly bookkeeping and reconciliation of up to 3 financial accounts",
+      "Monthly financial statements (P&L, balance sheet)",
+      "Year-end close package for the tax preparer"
+    ],
+    "servicesExcluded": [
+      "Tax return preparation",
+      "Payroll processing",
+      "Audit or assurance services"
+    ]
+  },
+  "fee": {
+    "model": "retainer",
+    "amount": { "amount": "850.00", "currency": "USD" },
+    "billingCadence": "monthly"
+  },
+  "responsibilities": {
+    "firm": [
+      "Maintain the general ledger and reconcile accounts monthly",
+      "Raise open items for unclear transactions within 5 business days of month-end"
+    ],
+    "client": [
+      "Provide bank and credit-card statements by the 5th of each month",
+      "Respond to open items within 10 business days"
+    ]
+  },
+  "status": "signed",
+  "signedAt": "2025-12-20T17:45:00Z"
+}

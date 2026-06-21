@@ -1,0 +1,158 @@
+openapi: 3.1.0
+info:
+  title: CPA Workpaper Spec API
+  version: "0.1"
+  description: >
+    A small, reference HTTP surface for exchanging CPA-workpaper vocabulary objects
+    between systems. This is an interoperability contract for the shapes defined by
+    the CPA Workpaper Spec JSON Schemas - not a product API and not an engine.
+    Implementations are free to expose a subset; the value is a shared vocabulary
+    and shared object shapes.
+  license:
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+  - url: https://example.invalid/api/v0.1
+    description: Placeholder. Replace with your own implementation host.
+tags:
+  - name: engagements
+  - name: close
+  - name: tax
+  - name: engagement-letters
+  - name: request-list
+paths:
+  /engagements:
+    get:
+      tags: [engagements]
+      summary: List engagements
+      operationId: listEngagements
+      parameters:
+        - name: clientId
+          in: query
+          required: false
+          schema: { type: string }
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [prospective, active, on_hold, completed, cancelled]
+      responses:
+        "200":
+          description: A list of engagements.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Engagement" }
+  /engagements/{engagementId}:
+    get:
+      tags: [engagements]
+      summary: Get an engagement
+      operationId: getEngagement
+      parameters:
+        - $ref: "#/components/parameters/EngagementId"
+      responses:
+        "200":
+          description: The engagement.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Engagement" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /engagements/{engagementId}/close-checklist:
+    get:
+      tags: [close]
+      summary: Get the monthly-close checklist for an engagement
+      operationId: getCloseChecklist
+      parameters:
+        - $ref: "#/components/parameters/EngagementId"
+      responses:
+        "200":
+          description: The close checklist.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CloseChecklist" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /engagements/{engagementId}/tax-prep:
+    get:
+      tags: [tax]
+      summary: Get the tax-prep workflow for an engagement
+      operationId: getTaxPrep
+      parameters:
+        - $ref: "#/components/parameters/EngagementId"
+      responses:
+        "200":
+          description: The tax-prep workflow.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TaxPrep" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /engagements/{engagementId}/request-list:
+    get:
+      tags: [request-list]
+      summary: List request-list items for an engagement
+      operationId: listRequestItems
+      parameters:
+        - $ref: "#/components/parameters/EngagementId"
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [requested, reminded, received, accepted, rejected, waived]
+      responses:
+        "200":
+          description: The request-list items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/RequestListItem" }
+  /engagement-letters/{engagementLetterId}:
+    get:
+      tags: [engagement-letters]
+      summary: Get an engagement-letter configuration
+      operationId: getEngagementLetter
+      parameters:
+        - name: engagementLetterId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: The engagement-letter configuration.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EngagementLetter" }
+        "404": { $ref: "#/components/responses/NotFound" }
+components:
+  parameters:
+    EngagementId:
+      name: engagementId
+      in: path
+      required: true
+      schema: { type: string }
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error: { type: string }
+            required: [error]
+  schemas:
+    # The canonical definitions live in the JSON Schema files under schema/v0.1/.
+    # These are referenced by $ref to the published $id. Tooling that cannot
+    # resolve remote $refs can substitute the local files in schema/v0.1/.
+    Engagement:
+      $ref: "https://cpa-workpaper-spec.org/schema/v0.1/engagement.schema.json"
+    CloseChecklist:
+      $ref: "https://cpa-workpaper-spec.org/schema/v0.1/close-checklist.schema.json"
+    TaxPrep:
+      $ref: "https://cpa-workpaper-spec.org/schema/v0.1/tax-prep.schema.json"
+    EngagementLetter:
+      $ref: "https://cpa-workpaper-spec.org/schema/v0.1/engagement-letter.schema.json"
+    RequestListItem:
+      $ref: "https://cpa-workpaper-spec.org/schema/v0.1/request-list-item.schema.json"

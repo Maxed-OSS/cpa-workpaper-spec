@@ -1,0 +1,27 @@
+{
+  "specVersion": "0.1",
+  "id": "eng_8f2a1c",
+  "clientId": "cli_acme",
+  "clientName": "Acme Widgets LLC",
+  "track": "bookkeeping",
+  "title": "2026 Monthly Bookkeeping - Acme Widgets LLC",
+  "status": "active",
+  "period": {
+    "label": "FY2026",
+    "start": "2026-01-01",
+    "end": "2026-12-31"
+  },
+  "team": [
+    { "id": "usr_jordan", "name": "Jordan Avery", "role": "preparer" },
+    { "id": "usr_sam", "name": "Sam Devlin", "role": "reviewer" }
+  ],
+  "engagementLetterId": "el_acme_2026",
+  "createdAt": "2026-01-03T15:04:00Z",
+  "notes": [
+    {
+      "author": { "id": "usr_jordan", "name": "Jordan Avery" },
+      "body": "Client switched bank in April; expect two operating accounts mid-year.",
+      "createdAt": "2026-04-02T12:00:00Z"
+    }
+  ]
+}

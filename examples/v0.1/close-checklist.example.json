@@ -1,0 +1,51 @@
+{
+  "specVersion": "0.1",
+  "id": "close_2026_05_acme",
+  "engagementId": "eng_8f2a1c",
+  "period": {
+    "label": "2026-05",
+    "start": "2026-05-01",
+    "end": "2026-05-31"
+  },
+  "status": "in_progress",
+  "tasks": [
+    {
+      "id": "t_bank",
+      "name": "Reconcile operating bank account",
+      "category": "reconciliation",
+      "status": "complete",
+      "assignee": { "id": "usr_jordan", "name": "Jordan Avery" },
+      "dueDate": "2026-06-10"
+    },
+    {
+      "id": "t_cc",
+      "name": "Reconcile company credit card",
+      "category": "reconciliation",
+      "status": "blocked",
+      "assignee": { "id": "usr_jordan", "name": "Jordan Avery" },
+      "openItemIds": ["oi_vendorx"]
+    },
+    {
+      "id": "t_accruals",
+      "name": "Post month-end accruals",
+      "category": "accruals",
+      "status": "pending"
+    },
+    {
+      "id": "t_tieout",
+      "name": "Tie out balance sheet to supporting schedules",
+      "category": "tie_out",
+      "status": "pending"
+    }
+  ],
+  "openItems": [
+    {
+      "id": "oi_vendorx",
+      "question": "What is the $4,210.00 charge to Vendor X on 2026-05-12? Need the receipt to classify it.",
+      "status": "awaiting_response",
+      "raisedBy": { "id": "usr_jordan", "name": "Jordan Avery" },
+      "directedTo": "client",
+      "raisedAt": "2026-06-05T09:30:00Z"
+    }
+  ]
+}

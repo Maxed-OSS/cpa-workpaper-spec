@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cpa-workpaper-spec.org/schema/v0.1/close-checklist.schema.json",
+  "title": "Monthly Close Checklist",
+  "description": "A monthly-close checklist tracks the bookkeeping tasks required to close a client's books for one fiscal period, together with the open-items loop - the back-and-forth questions sent to the client (or internal staff) that must be resolved before the period can be closed.",
+  "type": "object",
+  "properties": {
+    "specVersion": { "$ref": "common.schema.json#/$defs/specVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "engagementId": {
+      "$ref": "common.schema.json#/$defs/id",
+      "description": "The engagement this close belongs to."
+    },
+    "period": { "$ref": "common.schema.json#/$defs/fiscalPeriod" },
+    "status": {
+      "type": "string",
+      "description": "Overall state of the close. A close moves from not_started through in_progress and (optionally) review before being closed; reopened captures a period reopened after closing.",
+      "enum": ["not_started", "in_progress", "in_review", "closed", "reopened"]
+    },
+    "tasks": {
+      "type": "array",
+      "description": "The individual close tasks (e.g. reconcile bank, reconcile credit cards, review AR, accruals, depreciation, tie-out).",
+      "items": { "$ref": "#/$defs/closeTask" }
+    },
+    "openItems": {
+      "type": "array",
+      "description": "The open-items loop: questions or requests raised during the close that block completion until resolved.",
+      "items": { "$ref": "#/$defs/openItem" }
+    },
+    "closedAt": {
+      "$ref": "common.schema.json#/$defs/isoDateTime",
+      "description": "When the period was closed. Present only when status is closed."
+    },
+    "closedBy": { "$ref": "common.schema.json#/$defs/personRef" }
+  },
+  "required": ["specVersion", "id", "engagementId", "period", "status", "tasks"],
+  "additionalProperties": false,
+  "$defs": {
+    "closeTask": {
+      "type": "object",
+      "description": "A single unit of close work.",
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "name": {
+          "type": "string",
+          "description": "Task name, e.g. \"Reconcile operating bank account\".",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "category": {
+          "type": "string",
+          "description": "Optional grouping for the task.",
+          "enum": ["reconciliation", "accruals", "review", "adjustments", "tie_out", "reporting", "other"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "in_progress", "blocked", "complete", "not_applicable"]
+        },
+        "assignee": { "$ref": "common.schema.json#/$defs/personRef" },
+        "dueDate": { "$ref": "common.schema.json#/$defs/isoDate" },
+        "openItemIds": {
+          "type": "array",
+          "description": "Open items that block this task.",
+          "items": { "$ref": "common.schema.json#/$defs/id" }
+        }
+      },
+      "required": ["id", "name", "status"],
+      "additionalProperties": false
+    },
+    "openItem": {
+      "type": "object",
+      "description": "A question or request raised during the close that must be resolved before closing. The open-items loop is: open -> awaiting_response -> answered -> resolved (or wont_fix).",
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "question": {
+          "type": "string",
+          "description": "The question or request, e.g. \"What is the $4,210 charge to Vendor X on 2026-05-12?\".",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "status": {
+          "type": "string",
+          "enum": ["open", "awaiting_response", "answered", "resolved", "wont_fix"]
+        },
+        "raisedBy": { "$ref": "common.schema.json#/$defs/personRef" },
+        "directedTo": {
+          "type": "string",
+          "description": "Who the item is directed at.",
+          "enum": ["client", "internal"]
+        },
+        "raisedAt": { "$ref": "common.schema.json#/$defs/isoDateTime" },
+        "resolvedAt": { "$ref": "common.schema.json#/$defs/isoDateTime" },
+        "response": {
+          "type": "string",
+          "description": "The answer received, if any.",
+          "maxLength": 8192
+        },
+        "attachments": {
+          "type": "array",
+          "items": { "$ref": "common.schema.json#/$defs/attachmentRef" }
+        }
+      },
+      "required": ["id", "question", "status", "directedTo"],
+      "additionalProperties": false
+    }
+  }
+}

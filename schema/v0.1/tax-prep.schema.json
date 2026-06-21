@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cpa-workpaper-spec.org/schema/v0.1/tax-prep.schema.json",
+  "title": "Tax Preparation Workflow",
+  "description": "A stage model for preparing and filing a tax return. The workflow advances a return through a defined sequence of stages - from gathering source documents to e-filing and sealing the year - and tracks per-stage status and review comments. This is a vocabulary for interoperability, not a tax-calculation engine.",
+  "type": "object",
+  "properties": {
+    "specVersion": { "$ref": "common.schema.json#/$defs/specVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "engagementId": { "$ref": "common.schema.json#/$defs/id" },
+    "taxYear": {
+      "type": "integer",
+      "description": "The tax year the return covers.",
+      "minimum": 1900,
+      "maximum": 2100
+    },
+    "returnType": {
+      "type": "string",
+      "description": "The kind of return being prepared. Firm-agnostic labels; jurisdiction-specific form numbers can be carried in formNumber.",
+      "enum": ["individual", "partnership", "c_corp", "s_corp", "trust_estate", "nonprofit", "other"]
+    },
+    "formNumber": {
+      "type": "string",
+      "description": "Optional jurisdiction form label, e.g. \"1040\", \"1120\", \"T2\".",
+      "maxLength": 32
+    },
+    "currentStage": {
+      "$ref": "#/$defs/stageName",
+      "description": "The stage the return is currently in."
+    },
+    "stages": {
+      "type": "array",
+      "description": "Per-stage progress records. The canonical stage order is defined by stageName; a workflow need not populate every stage but should not invent stage names.",
+      "items": { "$ref": "#/$defs/stageRecord" }
+    },
+    "reviewComments": {
+      "type": "array",
+      "description": "Reviewer comments raised during preparation/review that may need preparer action before sign-off.",
+      "items": { "$ref": "#/$defs/reviewComment" }
+    },
+    "sealedAt": {
+      "$ref": "common.schema.json#/$defs/isoDateTime",
+      "description": "When the year was sealed (locked) after filing. Present only when currentStage is sealed."
+    }
+  },
+  "required": ["specVersion", "id", "engagementId", "taxYear", "returnType", "currentStage"],
+  "additionalProperties": false,
+  "$defs": {
+    "stageName": {
+      "type": "string",
+      "description": "Canonical, ordered tax-prep stages. Order: gathering -> in_preparation -> in_review -> awaiting_client_signature -> ready_to_file -> filed -> sealed.",
+      "enum": [
+        "gathering",
+        "in_preparation",
+        "in_review",
+        "awaiting_client_signature",
+        "ready_to_file",
+        "filed",
+        "sealed"
+      ]
+    },
+    "stageRecord": {
+      "type": "object",
+      "properties": {
+        "stage": { "$ref": "#/$defs/stageName" },
+        "status": {
+          "type": "string",
+          "enum": ["not_started", "in_progress", "complete", "skipped"]
+        },
+        "owner": { "$ref": "common.schema.json#/$defs/personRef" },
+        "enteredAt": { "$ref": "common.schema.json#/$defs/isoDateTime" },
+        "completedAt": { "$ref": "common.schema.json#/$defs/isoDateTime" }
+      },
+      "required": ["stage", "status"],
+      "additionalProperties": false
+    },
+    "reviewComment": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "body": { "type": "string", "minLength": 1, "maxLength": 8192 },
+        "severity": {
+          "type": "string",
+          "enum": ["info", "question", "must_fix"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["open", "addressed", "resolved"]
+        },
+        "author": { "$ref": "common.schema.json#/$defs/personRef" },
+        "createdAt": { "$ref": "common.schema.json#/$defs/isoDateTime" }
+      },
+      "required": ["id", "body", "status"],
+      "additionalProperties": false
+    }
+  }
+}

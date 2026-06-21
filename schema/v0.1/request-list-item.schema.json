@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cpa-workpaper-spec.org/schema/v0.1/request-list-item.schema.json",
+  "title": "Request List Item",
+  "description": "A single item on a request list (also called a PBC - 'prepared by client' - list). Each item is something the firm needs from the client to do the work: a document, a piece of information, or a confirmation. Request items drive the client-side chase loop and feed close open-items and tax-prep gathering.",
+  "type": "object",
+  "properties": {
+    "specVersion": { "$ref": "common.schema.json#/$defs/specVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "engagementId": { "$ref": "common.schema.json#/$defs/id" },
+    "label": {
+      "type": "string",
+      "description": "Short name of what is being requested, e.g. \"Prior-year tax return\", \"May bank statement - operating account\".",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional longer explanation of the request.",
+      "maxLength": 2048
+    },
+    "itemType": {
+      "type": "string",
+      "description": "The nature of what is requested.",
+      "enum": ["document", "information", "confirmation", "signature", "access"]
+    },
+    "category": {
+      "type": "string",
+      "description": "Optional taxonomy bucket for grouping items on a request list (e.g. bank, payroll, fixed-assets, prior-year, identity).",
+      "maxLength": 64
+    },
+    "status": {
+      "type": "string",
+      "description": "Fulfilment state. The chase loop runs requested -> reminded -> received -> accepted (or rejected, or waived).",
+      "enum": ["requested", "reminded", "received", "accepted", "rejected", "waived"]
+    },
+    "required": {
+      "type": "boolean",
+      "description": "Whether the item blocks the work if not provided.",
+      "default": true
+    },
+    "dueDate": { "$ref": "common.schema.json#/$defs/isoDate" },
+    "requestedFrom": { "$ref": "common.schema.json#/$defs/personRef" },
+    "remindersSent": {
+      "type": "integer",
+      "description": "Count of reminders sent for this item.",
+      "minimum": 0,
+      "default": 0
+    },
+    "receivedAt": { "$ref": "common.schema.json#/$defs/isoDateTime" },
+    "attachments": {
+      "type": "array",
+      "description": "Documents fulfilling the request.",
+      "items": { "$ref": "common.schema.json#/$defs/attachmentRef" }
+    }
+  },
+  "required": ["specVersion", "id", "label", "itemType", "status"],
+  "additionalProperties": false
+}

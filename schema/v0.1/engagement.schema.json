@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cpa-workpaper-spec.org/schema/v0.1/engagement.schema.json",
+  "title": "Engagement",
+  "description": "An engagement is a bounded body of professional work a firm performs for a client over a period - for example a tax-year return, a monthly-bookkeeping arrangement, or an advisory project. It is the top-level container that close checklists, tax-prep workflows, and request lists hang from.",
+  "type": "object",
+  "properties": {
+    "specVersion": { "$ref": "common.schema.json#/$defs/specVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "clientId": {
+      "$ref": "common.schema.json#/$defs/id",
+      "description": "Identifier of the client this engagement is for."
+    },
+    "clientName": {
+      "type": "string",
+      "description": "Display name of the client.",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "track": { "$ref": "common.schema.json#/$defs/serviceTrack" },
+    "title": {
+      "type": "string",
+      "description": "Human-readable engagement title, e.g. \"2025 Form 1120 - Acme Holdings\".",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "status": {
+      "type": "string",
+      "description": "Lifecycle state of the engagement as a whole.",
+      "enum": ["prospective", "active", "on_hold", "completed", "cancelled"]
+    },
+    "period": {
+      "$ref": "common.schema.json#/$defs/fiscalPeriod",
+      "description": "The reporting period the engagement covers (e.g. the tax year or the close month range)."
+    },
+    "team": {
+      "type": "array",
+      "description": "People assigned to the engagement.",
+      "items": { "$ref": "common.schema.json#/$defs/personRef" }
+    },
+    "engagementLetterId": {
+      "$ref": "common.schema.json#/$defs/id",
+      "description": "Optional reference to the engagement-letter configuration that governs this engagement."
+    },
+    "createdAt": { "$ref": "common.schema.json#/$defs/isoDateTime" },
+    "completedAt": {
+      "$ref": "common.schema.json#/$defs/isoDateTime",
+      "description": "Timestamp the engagement was completed/sealed. Present only when status is completed."
+    },
+    "notes": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/note" }
+    }
+  },
+  "required": ["specVersion", "id", "clientId", "track", "title", "status"],
+  "additionalProperties": false
+}

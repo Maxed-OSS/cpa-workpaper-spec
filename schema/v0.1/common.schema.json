@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cpa-workpaper-spec.org/schema/v0.1/common.schema.json",
+  "title": "CPA Workpaper Spec - Common Definitions",
+  "description": "Shared building-block definitions reused across the CPA Workpaper Spec entity schemas (v0.1). This file is not itself a document schema; it only provides reusable $defs referenced via $ref.",
+  "$defs": {
+    "specVersion": {
+      "type": "string",
+      "description": "Semantic version of the CPA Workpaper Spec this document conforms to.",
+      "const": "0.1"
+    },
+    "id": {
+      "type": "string",
+      "description": "Opaque, system-assigned identifier for an entity. The spec does not mandate a format (UUID, ULID, slug, and integer-as-string are all valid).",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "isoDate": {
+      "type": "string",
+      "description": "Calendar date with no time component (RFC 3339 full-date).",
+      "format": "date"
+    },
+    "isoDateTime": {
+      "type": "string",
+      "description": "Timestamp with timezone offset (RFC 3339 date-time).",
+      "format": "date-time"
+    },
+    "currencyCode": {
+      "type": "string",
+      "description": "ISO 4217 three-letter currency code.",
+      "pattern": "^[A-Z]{3}$"
+    },
+    "money": {
+      "type": "object",
+      "description": "A monetary amount. Stored as a decimal string to avoid float rounding, plus an ISO 4217 currency.",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "description": "Decimal amount as a string, e.g. \"1250.00\". May be negative.",
+          "pattern": "^-?\\d+(\\.\\d{1,4})?$"
+        },
+        "currency": { "$ref": "#/$defs/currencyCode" }
+      },
+      "required": ["amount", "currency"],
+      "additionalProperties": false
+    },
+    "personRef": {
+      "type": "object",
+      "description": "A lightweight reference to a person (staff member or client contact). Identity systems are out of scope for this spec; only a stable id and a display name are modeled.",
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "role": {
+          "type": "string",
+          "description": "Optional free-text role label, e.g. \"preparer\", \"reviewer\", \"client-contact\".",
+          "maxLength": 64
+        }
+      },
+      "required": ["id", "name"],
+      "additionalProperties": false
+    },
+    "serviceTrack": {
+      "type": "string",
+      "description": "The category of professional service an engagement covers. Firm-agnostic vocabulary.",
+      "enum": ["tax", "bookkeeping", "accounting", "advisory", "audit", "other"]
+    },
+    "fiscalPeriod": {
+      "type": "object",
+      "description": "A bounded reporting period (a month, quarter, or year) identified by start and end dates.",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Human label, e.g. \"2026-05\", \"FY2025\", \"Q1 2026\".",
+          "maxLength": 64
+        },
+        "start": { "$ref": "#/$defs/isoDate" },
+        "end": { "$ref": "#/$defs/isoDate" }
+      },
+      "required": ["start", "end"],
+      "additionalProperties": false
+    },
+    "attachmentRef": {
+      "type": "object",
+      "description": "A reference to a supporting document. The spec models the reference, not the bytes; storage and transport are implementation concerns.",
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "filename": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "contentType": {
+          "type": "string",
+          "description": "IANA media type, e.g. \"application/pdf\".",
+          "maxLength": 128
+        },
+        "uri": {
+          "type": "string",
+          "description": "Optional resolvable location for the attachment.",
+          "format": "uri"
+        }
+      },
+      "required": ["id", "filename"],
+      "additionalProperties": false
+    },
+    "note": {
+      "type": "object",
+      "description": "A free-text annotation with optional authorship and timestamp.",
+      "properties": {
+        "author": { "$ref": "#/$defs/personRef" },
+        "body": { "type": "string", "minLength": 1, "maxLength": 8192 },
+        "createdAt": { "$ref": "#/$defs/isoDateTime" }
+      },
+      "required": ["body"],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cpa-workpaper-spec.org/schema/v0.1/engagement-letter.schema.json",
+  "title": "Engagement Letter Configuration",
+  "description": "A structured, machine-readable description of the terms an engagement letter codifies: the scope of services, the fee arrangement, the billing cadence, and the responsibilities of each party. This models the configurable contract terms - not the rendered prose document.",
+  "type": "object",
+  "properties": {
+    "specVersion": { "$ref": "common.schema.json#/$defs/specVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "clientId": { "$ref": "common.schema.json#/$defs/id" },
+    "track": { "$ref": "common.schema.json#/$defs/serviceTrack" },
+    "effectiveDate": {
+      "$ref": "common.schema.json#/$defs/isoDate",
+      "description": "Date the terms take effect."
+    },
+    "scope": {
+      "type": "object",
+      "description": "What the firm will and will not do under this engagement.",
+      "properties": {
+        "servicesIncluded": {
+          "type": "array",
+          "description": "Service line items included in scope.",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "minItems": 1
+        },
+        "servicesExcluded": {
+          "type": "array",
+          "description": "Explicitly out-of-scope items.",
+          "items": { "type": "string", "minLength": 1, "maxLength": 512 }
+        }
+      },
+      "required": ["servicesIncluded"],
+      "additionalProperties": false
+    },
+    "fee": {
+      "type": "object",
+      "description": "The fee arrangement governing the engagement.",
+      "properties": {
+        "model": {
+          "type": "string",
+          "description": "How the fee is structured.",
+          "enum": ["fixed", "hourly", "per_return", "retainer", "value_based"]
+        },
+        "amount": {
+          "$ref": "common.schema.json#/$defs/money",
+          "description": "The headline amount. Interpretation depends on model (total for fixed/per_return, rate for hourly, period amount for retainer)."
+        },
+        "billingCadence": {
+          "type": "string",
+          "description": "How often the client is billed.",
+          "enum": ["one_time", "monthly", "quarterly", "annually", "on_completion", "milestone"]
+        }
+      },
+      "required": ["model"],
+      "additionalProperties": false
+    },
+    "responsibilities": {
+      "type": "object",
+      "description": "Division of responsibilities between the firm and the client.",
+      "properties": {
+        "firm": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 512 }
+        },
+        "client": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 512 }
+        }
+      },
+      "additionalProperties": false
+    },
+    "status": {
+      "type": "string",
+      "description": "Lifecycle of the engagement-letter agreement.",
+      "enum": ["draft", "sent", "signed", "countersigned", "expired", "void"]
+    },
+    "signedAt": { "$ref": "common.schema.json#/$defs/isoDateTime" }
+  },
+  "required": ["specVersion", "id", "clientId", "track", "scope", "fee", "status"],
+  "additionalProperties": false
+}
