@@ -1,0 +1,8 @@
+{
+  "specVersion": "0.1",
+  "id": "tax_bad1",
+  "engagementId": "eng_x",
+  "taxYear": 2025,
+  "returnType": "individual",
+  "currentStage": "almost_filed"
+}

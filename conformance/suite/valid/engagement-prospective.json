@@ -1,0 +1,12 @@
+{
+  "specVersion": "0.1",
+  "id": "eng_prospect_dyna",
+  "clientId": "cli_dyna",
+  "clientName": "Dyna Logistics Inc.",
+  "track": "accounting",
+  "title": "Controller services - scoping",
+  "status": "prospective",
+  "team": [
+    { "id": "usr_rivera", "name": "Casey Rivera", "role": "partner" }
+  ]
+}

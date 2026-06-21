@@ -1,0 +1,10 @@
+{
+  "specVersion": "0.1",
+  "id": "close_bad1",
+  "engagementId": "eng_x",
+  "period": { "label": "2026-06", "start": "2026-06-01", "end": "2026-06-30" },
+  "status": "in_progress",
+  "tasks": [
+    { "id": "t1", "name": "Reconcile bank", "status": "almost_done" }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "specVersion": "0.1",
+  "id": "eng_bad2",
+  "clientId": "cli_bad2",
+  "track": "tax",
+  "title": "Status outside the enum",
+  "status": "in_flight"
+}

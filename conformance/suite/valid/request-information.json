@@ -1,0 +1,13 @@
+{
+  "specVersion": "0.1",
+  "id": "rli_mileage",
+  "engagementId": "eng_nguyen_1040",
+  "label": "Business mileage log (2025)",
+  "description": "Total business miles driven and the method used to track them.",
+  "itemType": "information",
+  "category": "deductions",
+  "status": "requested",
+  "required": false,
+  "dueDate": "2026-03-01",
+  "requestedFrom": { "id": "cli_nguyen_primary", "name": "Minh Nguyen", "role": "client-contact" }
+}

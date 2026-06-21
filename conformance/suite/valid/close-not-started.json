@@ -1,0 +1,12 @@
+{
+  "specVersion": "0.1",
+  "id": "close_2026_06_dyna",
+  "engagementId": "eng_dyna_books",
+  "period": { "label": "2026-06", "start": "2026-06-01", "end": "2026-06-30" },
+  "status": "not_started",
+  "tasks": [
+    { "id": "t_bank", "name": "Reconcile operating bank account", "category": "reconciliation", "status": "pending" },
+    { "id": "t_cc", "name": "Reconcile company credit card", "category": "reconciliation", "status": "pending" },
+    { "id": "t_review", "name": "Review P&L for anomalies", "category": "review", "status": "pending" }
+  ]
+}

@@ -1,5 +1,8 @@
 # cpa-workpaper-spec
 
+[![ci](https://github.com/maxed-oss/cpa-workpaper-spec/actions/workflows/ci.yml/badge.svg)](https://github.com/maxed-oss/cpa-workpaper-spec/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
 An open, versioned **vocabulary** for the common units of CPA work - expressed as
 JSON Schema (draft 2020-12) plus a small OpenAPI description.
 
@@ -39,13 +42,24 @@ schema/v0.1/            JSON Schema (draft 2020-12) - the normative spec
   request-list-item.schema.json
 openapi/                Small OpenAPI 3.1 surface over the vocabulary
 examples/v0.1/          One worked, synthetic example per schema
-validator/validate.py   Offline validator CLI
-tests/                  pytest suite (schemas, examples, negative cases)
+conformance/            Manifest-driven conformance corpus + runner
+validator/validate.py   Offline Python validator CLI
+validator-js/           Offline JavaScript / Ajv validator CLI + tests
+tests/                  pytest suite (schemas, examples, negative + conformance)
 docs/MODEL.md           Long-form explanation of the model
+docs/VERSIONING.md      SemVer policy + the change (RFC) process
+CHANGELOG.md            Notable changes per version
 ```
 
 See [`docs/MODEL.md`](docs/MODEL.md) for the full data model and how the
 entities relate.
+
+## Clone
+
+```bash
+git clone https://github.com/maxed-oss/cpa-workpaper-spec.git
+cd cpa-workpaper-spec
+```
 
 ## Install
 
@@ -102,19 +116,66 @@ the full set):
 }
 ```
 
+## JavaScript / Ajv validator
+
+JavaScript and Node teams can target the exact same schemas with the bundled
+[Ajv](https://ajv.js.org/)-based validator in [`validator-js/`](validator-js):
+
+```bash
+cd validator-js
+npm install
+
+node cli.js --all                                  # validate every example
+node cli.js ../my-engagement.json --schema engagement
+node cli.js --list-schemas
+npm test                                            # node --test suite
+```
+
+It mirrors the Python CLI's commands and exit codes, and resolves all
+cross-schema `$ref`s offline. Both validators are run against the same
+conformance corpus (below), so they are proven to agree.
+
 ### Using the schemas in your own validator
 
 The schemas are plain JSON Schema draft 2020-12 and work with any compliant
 validator (Ajv, `python-jsonschema`, `jsonschema-rs`, etc.). Each schema has a
-stable `$id` under `https://cpa-workpaper-spec.org/schema/v0.1/`. Cross-file
-`$ref`s use bare filenames (e.g. `common.schema.json#/$defs/money`), so loading
-the `schema/v0.1/` directory into a ref store resolves everything.
+stable `$id` under `https://cpa-workpaper-spec.org/schema/v0.1/`. These `$id`
+URLs are the canonical identifiers and resolve to the published schema files
+**once the spec is hosted at that domain**; until then (and for fully offline
+use) load the local `schema/v0.1/` directory into your validator's ref store.
+Cross-file `$ref`s use bare filenames (e.g. `common.schema.json#/$defs/money`),
+so loading that directory resolves everything without network access. The
+bundled Python and JavaScript validators do exactly this.
+
+## Conformance suite
+
+The [`conformance/`](conformance) directory is a manifest-driven corpus of
+valid/invalid synthetic documents that gives "conformant" a single, runnable
+meaning. Both reference validators run it, and you can run it against your own
+implementation to demonstrate conformance.
+
+```bash
+python3 conformance/run.py -v       # run the suite with the Python validator
+```
+
+See [`conformance/README.md`](conformance/README.md) for the manifest format
+and how to target it from any language.
 
 ## Versioning
 
 Documents carry `specVersion` (currently `"0.1"`). The spec follows
 [SemVer](https://semver.org/); a breaking change adds a new `schema/<version>/`
-directory so existing documents keep validating. See [`CHANGELOG.md`](CHANGELOG.md).
+directory so existing documents keep validating. The full policy and the
+lightweight change (RFC) process are in [`docs/VERSIONING.md`](docs/VERSIONING.md);
+notable changes are recorded in [`CHANGELOG.md`](CHANGELOG.md).
+
+## Continuous integration
+
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every push and
+pull request: the Python suite across Python 3.9 / 3.11 / 3.13, the JavaScript
+suite across Node 18 / 20 / 22, the conformance runner, an OpenAPI lint, and a
+build check that every schema's cross-references resolve and both validators
+accept all examples.
 
 ## Scope and non-goals
 
@@ -128,9 +189,14 @@ synthetic.
 
 Issues and pull requests are welcome. Please:
 
-1. Keep changes firm-agnostic and free of any real client data.
+1. Keep changes firm-agnostic and free of any real client data (synthetic only).
 2. Add or update an example for any schema change.
-3. Run `make validate && make test` before opening a PR.
+3. Add or update a conformance fixture (and its `conformance/manifest.json`
+   entry) so the change is covered by both validators.
+4. Run `make all` (Python + JavaScript suites + conformance) before opening a PR.
+
+See [`docs/VERSIONING.md`](docs/VERSIONING.md) for the change (RFC) process and
+how the spec is versioned.
 
 ## License
 

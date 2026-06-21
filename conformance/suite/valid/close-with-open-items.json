@@ -1,0 +1,37 @@
+{
+  "specVersion": "0.1",
+  "id": "close_2026_04_dyna",
+  "engagementId": "eng_dyna_books",
+  "period": { "label": "2026-04", "start": "2026-04-01", "end": "2026-04-30" },
+  "status": "in_progress",
+  "tasks": [
+    {
+      "id": "t_bank",
+      "name": "Reconcile operating bank account",
+      "category": "reconciliation",
+      "status": "blocked",
+      "openItemIds": ["oi_unknown_deposit"]
+    },
+    { "id": "t_accruals", "name": "Post month-end accruals", "category": "accruals", "status": "in_progress" }
+  ],
+  "openItems": [
+    {
+      "id": "oi_unknown_deposit",
+      "question": "What was the $12,000.00 deposit on 2026-04-18? Need to know if it is revenue or an owner contribution.",
+      "status": "awaiting_response",
+      "raisedBy": { "id": "usr_jordan", "name": "Jordan Avery" },
+      "directedTo": "client",
+      "raisedAt": "2026-05-04T10:00:00Z"
+    },
+    {
+      "id": "oi_reclass",
+      "question": "Should the software subscription be reclassed from Office Expense to Software?",
+      "status": "resolved",
+      "raisedBy": { "id": "usr_jordan", "name": "Jordan Avery" },
+      "directedTo": "internal",
+      "raisedAt": "2026-05-03T09:00:00Z",
+      "resolvedAt": "2026-05-03T15:30:00Z",
+      "response": "Yes, reclass to Software going forward."
+    }
+  ]
+}

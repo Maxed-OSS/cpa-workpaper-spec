@@ -1,0 +1,12 @@
+{
+  "specVersion": "0.1",
+  "id": "el_bad1",
+  "clientId": "cli_x",
+  "track": "tax",
+  "scope": { "servicesIncluded": ["Prepare the return"] },
+  "fee": {
+    "model": "per_return",
+    "amount": { "amount": "650.00", "currency": "US$" }
+  },
+  "status": "draft"
+}

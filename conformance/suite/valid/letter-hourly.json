@@ -1,0 +1,19 @@
+{
+  "specVersion": "0.1",
+  "id": "el_dyna_advisory",
+  "clientId": "cli_dyna",
+  "track": "advisory",
+  "effectiveDate": "2026-07-01",
+  "scope": {
+    "servicesIncluded": [
+      "Ad-hoc CFO advisory sessions",
+      "Cash-flow forecasting support"
+    ]
+  },
+  "fee": {
+    "model": "hourly",
+    "amount": { "amount": "275.00", "currency": "USD" },
+    "billingCadence": "monthly"
+  },
+  "status": "draft"
+}

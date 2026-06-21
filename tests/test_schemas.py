@@ -152,3 +152,51 @@ def test_valid_document_round_trips_clean():
     snapshot = copy.deepcopy(doc)
     assert validate_document(doc, "request-list-item", SCHEMAS, STORE) == []
     assert doc == snapshot
+
+
+# ---------------------------------------------------------------------------
+# Conformance suite: every manifest fixture behaves as required.
+# This is the same manifest the JavaScript validator runs, so the two
+# implementations are proven to agree on the corpus.
+# ---------------------------------------------------------------------------
+
+CONFORMANCE_DIR = REPO_ROOT / "conformance"
+
+
+def _load_manifest_cases() -> list[dict]:
+    with (CONFORMANCE_DIR / "manifest.json").open(encoding="utf-8") as fh:
+        return json.load(fh)["cases"]
+
+
+MANIFEST_CASES = _load_manifest_cases()
+
+
+def test_conformance_manifest_is_non_empty():
+    assert MANIFEST_CASES, "expected conformance cases in the manifest"
+
+
+@pytest.mark.parametrize(
+    "case", MANIFEST_CASES, ids=[c["file"] for c in MANIFEST_CASES]
+)
+def test_conformance_case(case: dict):
+    with (CONFORMANCE_DIR / case["file"]).open(encoding="utf-8") as fh:
+        document = json.load(fh)
+    errors = validate_document(document, case["schema"], SCHEMAS, STORE)
+    accepted = not errors
+    if case["expect"] == "valid":
+        assert accepted, f"{case['file']} should be valid:\n" + "\n".join(errors)
+    else:
+        assert not accepted, f"{case['file']} should be rejected but was accepted"
+
+
+def test_every_conformance_file_exists_and_is_referenced():
+    referenced = {c["file"] for c in MANIFEST_CASES}
+    on_disk = {
+        str(p.relative_to(CONFORMANCE_DIR)).replace("\\", "/")
+        for p in (CONFORMANCE_DIR / "suite").rglob("*.json")
+    }
+    assert referenced == on_disk, (
+        "manifest and suite/ directory must match exactly.\n"
+        f"only in manifest: {referenced - on_disk}\n"
+        f"only on disk: {on_disk - referenced}"
+    )

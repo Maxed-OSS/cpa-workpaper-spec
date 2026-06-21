@@ -1,0 +1,22 @@
+{
+  "specVersion": "0.1",
+  "id": "tax_2024_harborview",
+  "engagementId": "eng_2024_harborview",
+  "taxYear": 2024,
+  "returnType": "partnership",
+  "formNumber": "1065",
+  "currentStage": "sealed",
+  "stages": [
+    { "stage": "gathering", "status": "complete", "enteredAt": "2025-01-12T00:00:00Z", "completedAt": "2025-02-01T00:00:00Z" },
+    { "stage": "in_preparation", "status": "complete", "enteredAt": "2025-02-01T00:00:00Z", "completedAt": "2025-02-20T00:00:00Z" },
+    { "stage": "in_review", "status": "complete", "enteredAt": "2025-02-20T00:00:00Z", "completedAt": "2025-03-01T00:00:00Z" },
+    { "stage": "awaiting_client_signature", "status": "complete", "enteredAt": "2025-03-01T00:00:00Z", "completedAt": "2025-03-08T00:00:00Z" },
+    { "stage": "ready_to_file", "status": "complete", "enteredAt": "2025-03-08T00:00:00Z", "completedAt": "2025-03-10T00:00:00Z" },
+    { "stage": "filed", "status": "complete", "enteredAt": "2025-03-10T00:00:00Z", "completedAt": "2025-03-12T00:00:00Z" },
+    { "stage": "sealed", "status": "complete", "enteredAt": "2025-03-12T00:00:00Z", "completedAt": "2025-03-12T00:00:00Z" }
+  ],
+  "reviewComments": [
+    { "id": "rc_001", "body": "Confirm guaranteed payments reconcile to the partner agreements.", "severity": "question", "status": "resolved" }
+  ],
+  "sealedAt": "2025-03-12T22:15:00Z"
+}

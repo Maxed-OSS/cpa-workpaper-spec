@@ -1,0 +1,15 @@
+{
+  "specVersion": "0.1",
+  "id": "close_2026_03_dyna",
+  "engagementId": "eng_dyna_books",
+  "period": { "label": "2026-03", "start": "2026-03-01", "end": "2026-03-31" },
+  "status": "closed",
+  "tasks": [
+    { "id": "t_bank", "name": "Reconcile operating bank account", "category": "reconciliation", "status": "complete" },
+    { "id": "t_tieout", "name": "Tie out balance sheet to supporting schedules", "category": "tie_out", "status": "complete" },
+    { "id": "t_report", "name": "Issue monthly financial package", "category": "reporting", "status": "complete" }
+  ],
+  "openItems": [],
+  "closedAt": "2026-04-08T18:00:00Z",
+  "closedBy": { "id": "usr_sam", "name": "Sam Devlin", "role": "reviewer" }
+}

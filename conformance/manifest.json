@@ -1,0 +1,30 @@
+{
+  "specVersion": "0.1",
+  "description": "Conformance fixtures for the CPA Workpaper Spec. Each case names a document, the schema it should be validated against, and whether a conformant validator must accept ('valid') or reject ('invalid') it. Both the Python and JavaScript validators run this manifest, and any third-party implementation can target it to prove conformance.",
+  "cases": [
+    { "file": "suite/valid/engagement-minimal.json", "schema": "engagement", "expect": "valid", "note": "Only the six required fields." },
+    { "file": "suite/valid/engagement-prospective.json", "schema": "engagement", "expect": "valid", "note": "Prospective engagement, no period yet." },
+    { "file": "suite/valid/engagement-completed.json", "schema": "engagement", "expect": "valid", "note": "Completed engagement with completedAt and notes." },
+    { "file": "suite/valid/close-not-started.json", "schema": "close-checklist", "expect": "valid", "note": "Close with tasks but no open items." },
+    { "file": "suite/valid/close-with-open-items.json", "schema": "close-checklist", "expect": "valid", "note": "Open-items loop in awaiting_response and resolved states." },
+    { "file": "suite/valid/close-closed.json", "schema": "close-checklist", "expect": "valid", "note": "Fully closed period with closedAt and closedBy." },
+    { "file": "suite/valid/tax-gathering.json", "schema": "tax-prep", "expect": "valid", "note": "Individual return early in the gathering stage." },
+    { "file": "suite/valid/tax-sealed.json", "schema": "tax-prep", "expect": "valid", "note": "Partnership return sealed after filing." },
+    { "file": "suite/valid/letter-hourly.json", "schema": "engagement-letter", "expect": "valid", "note": "Hourly fee model, draft status." },
+    { "file": "suite/valid/letter-per-return.json", "schema": "engagement-letter", "expect": "valid", "note": "Per-return tax letter, signed." },
+    { "file": "suite/valid/request-information.json", "schema": "request-list-item", "expect": "valid", "note": "Information request, still requested." },
+    { "file": "suite/valid/request-signature.json", "schema": "request-list-item", "expect": "valid", "note": "Signature request with reminders." },
+
+    { "file": "suite/invalid/engagement-missing-track.json", "schema": "engagement", "expect": "invalid", "note": "Required 'track' omitted." },
+    { "file": "suite/invalid/engagement-bad-status.json", "schema": "engagement", "expect": "invalid", "note": "Status outside the enum." },
+    { "file": "suite/invalid/engagement-extra-field.json", "schema": "engagement", "expect": "invalid", "note": "Unknown property under additionalProperties:false." },
+    { "file": "suite/invalid/close-bad-task-status.json", "schema": "close-checklist", "expect": "invalid", "note": "Nested closeTask.status outside the enum." },
+    { "file": "suite/invalid/close-open-item-missing-directedTo.json", "schema": "close-checklist", "expect": "invalid", "note": "Open item missing required directedTo." },
+    { "file": "suite/invalid/tax-bad-stage.json", "schema": "tax-prep", "expect": "invalid", "note": "currentStage not a canonical stage." },
+    { "file": "suite/invalid/tax-year-out-of-range.json", "schema": "tax-prep", "expect": "invalid", "note": "taxYear below the allowed minimum." },
+    { "file": "suite/invalid/letter-bad-currency.json", "schema": "engagement-letter", "expect": "invalid", "note": "Currency code fails the ISO 4217 pattern." },
+    { "file": "suite/invalid/letter-empty-services.json", "schema": "engagement-letter", "expect": "invalid", "note": "servicesIncluded must have at least one item." },
+    { "file": "suite/invalid/request-bad-itemType.json", "schema": "request-list-item", "expect": "invalid", "note": "itemType outside the enum." },
+    { "file": "suite/invalid/request-wrong-version.json", "schema": "request-list-item", "expect": "invalid", "note": "specVersion is not the const '0.1'." }
+  ]
+}

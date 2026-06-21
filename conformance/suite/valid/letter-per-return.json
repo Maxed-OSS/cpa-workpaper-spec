@@ -1,0 +1,28 @@
+{
+  "specVersion": "0.1",
+  "id": "el_nguyen_2025",
+  "clientId": "cli_nguyen",
+  "track": "tax",
+  "effectiveDate": "2026-01-15",
+  "scope": {
+    "servicesIncluded": [
+      "Preparation of the 2025 federal individual income tax return (Form 1040)",
+      "Preparation of one state resident return"
+    ],
+    "servicesExcluded": [
+      "Representation in the event of an audit",
+      "Bookkeeping or transaction categorization"
+    ]
+  },
+  "fee": {
+    "model": "per_return",
+    "amount": { "amount": "650.00", "currency": "USD" },
+    "billingCadence": "on_completion"
+  },
+  "responsibilities": {
+    "firm": ["Prepare and e-file the return after client review and signature"],
+    "client": ["Provide complete and accurate source documents by 2026-03-15"]
+  },
+  "status": "signed",
+  "signedAt": "2026-01-20T16:00:00Z"
+}

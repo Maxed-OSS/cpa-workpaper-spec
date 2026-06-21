@@ -1,0 +1,20 @@
+{
+  "specVersion": "0.1",
+  "id": "eng_2024_harborview",
+  "clientId": "cli_harborview",
+  "clientName": "Harborview Cafe LLC",
+  "track": "tax",
+  "title": "2024 Form 1065 - Harborview Cafe LLC",
+  "status": "completed",
+  "period": { "label": "TY2024", "start": "2024-01-01", "end": "2024-12-31" },
+  "team": [
+    { "id": "usr_lee", "name": "Lee Morgan", "role": "preparer" },
+    { "id": "usr_pat", "name": "Pat Quinn", "role": "reviewer" }
+  ],
+  "engagementLetterId": "el_harborview_2024",
+  "createdAt": "2025-01-10T14:00:00Z",
+  "completedAt": "2025-03-12T22:15:00Z",
+  "notes": [
+    { "body": "Filed on extension; K-1s delivered to all three partners." }
+  ]
+}

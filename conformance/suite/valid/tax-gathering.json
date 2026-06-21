@@ -1,0 +1,17 @@
+{
+  "specVersion": "0.1",
+  "id": "tax_2025_nguyen",
+  "engagementId": "eng_nguyen_1040",
+  "taxYear": 2025,
+  "returnType": "individual",
+  "formNumber": "1040",
+  "currentStage": "gathering",
+  "stages": [
+    {
+      "stage": "gathering",
+      "status": "in_progress",
+      "owner": { "id": "usr_lee", "name": "Lee Morgan", "role": "preparer" },
+      "enteredAt": "2026-02-01T00:00:00Z"
+    }
+  ]
+}

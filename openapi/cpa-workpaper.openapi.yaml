@@ -12,8 +12,13 @@ info:
     name: Apache-2.0
     url: https://www.apache.org/licenses/LICENSE-2.0
 servers:
-  - url: https://example.invalid/api/v0.1
-    description: Placeholder. Replace with your own implementation host.
+  # This spec is a vocabulary, not a hosted service, so there is no canonical
+  # server. Implementations substitute their own host. The reserved .invalid
+  # TLD (RFC 2606) is used deliberately so this never resolves to a real host.
+  - url: https://cpa-workpaper.example.invalid/api/v0.1
+    description: >
+      Example only - replace with your own implementation host. There is no
+      official hosted API for this spec.
 tags:
   - name: engagements
   - name: close

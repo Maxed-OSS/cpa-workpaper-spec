@@ -1,0 +1,23 @@
+# Redocly configuration for linting/bundling the CPA Workpaper Spec OpenAPI
+# description (openapi/cpa-workpaper.openapi.yaml).
+#
+# This OpenAPI surface is a reference *interoperability contract*, not a product
+# API, so a few recommended product-API rules are relaxed:
+#
+#   - The component schemas reference the canonical JSON Schemas by their
+#     published $id (e.g. https://cpa-workpaper-spec.org/schema/v0.1/...). Those
+#     URLs resolve once the schemas are hosted; offline they are intentionally
+#     external, so no-unresolved-refs is turned off.
+#   - Auth, tag descriptions, and a mandatory 4xx-per-operation are product-API
+#     conventions that do not apply to a vocabulary reference surface.
+#
+# Everything else uses Redocly's recommended ruleset so genuine structural
+# problems still fail the lint.
+extends:
+  - recommended
+rules:
+  no-unresolved-refs: off
+  security-defined: off
+  tag-description: off
+  operation-4xx-response: off
+  no-server-example.com: off

@@ -1,0 +1,13 @@
+{
+  "specVersion": "0.1",
+  "id": "rli_efile_auth",
+  "engagementId": "eng_nguyen_1040",
+  "label": "Signed e-file authorization (Form 8879)",
+  "itemType": "signature",
+  "category": "identity",
+  "status": "reminded",
+  "required": true,
+  "dueDate": "2026-04-10",
+  "requestedFrom": { "id": "cli_nguyen_primary", "name": "Minh Nguyen", "role": "client-contact" },
+  "remindersSent": 2
+}

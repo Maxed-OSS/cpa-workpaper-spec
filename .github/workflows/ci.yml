@@ -1,0 +1,94 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    name: Python validator + conformance (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Validate bundled examples
+        run: python validator/validate.py --all
+      - name: Run test suite
+        run: python -m pytest -q
+      - name: Run conformance suite
+        run: python conformance/run.py -v
+
+  javascript:
+    name: JavaScript / Ajv validator (node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ["18", "20", "22"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        working-directory: validator-js
+        run: npm ci
+      - name: Validate bundled examples
+        working-directory: validator-js
+        run: node cli.js --all
+      - name: Run test suite (incl. conformance manifest)
+        working-directory: validator-js
+        run: npm test
+
+  openapi:
+    name: OpenAPI lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Lint the OpenAPI description
+        run: npx --yes @redocly/cli@1 lint --config redocly.yaml openapi/cpa-workpaper.openapi.yaml
+
+  build:
+    name: Spec build (schemas resolve + all validators green)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install Python deps
+        run: python -m pip install -r requirements.txt
+      - name: Build check - every schema loads and cross-refs resolve
+        run: python validator/validate.py --list-schemas
+      - name: Build check - Python validator accepts all examples
+        run: python validator/validate.py --all
+      - name: Install JS deps
+        working-directory: validator-js
+        run: npm ci
+      - name: Build check - JS validator accepts all examples
+        working-directory: validator-js
+        run: node cli.js --all
