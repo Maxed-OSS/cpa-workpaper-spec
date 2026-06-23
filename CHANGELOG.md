@@ -8,19 +8,32 @@ for how versions and changes are managed.
 
 ## [Unreleased]
 
-No normative schema changes. The spec surface (the schemas under
-`schema/v0.1/`) is unchanged; documents that validated before still validate.
-This release expands the tooling and proof-of-conformance around the spec.
+This release adds the `workpaper` entity (the spec's namesake working file) and
+expands the tooling and proof-of-conformance around the vocabulary. The change
+is additive: every document that validated against the v0.1 schemas before still
+validates.
 
 ### Added
+- **Normative spec document** (`SPEC.md`): the conformance rules for documents,
+  producers, consumers, and validators, stated with RFC 2119 keywords. It names
+  the JSON Schema files as its machine-readable form and the conformance suite as
+  its runnable definition, and is cross-linked from the README. A test
+  (`tests/test_spec_doc.py`) keeps the spec's required-field table in lockstep
+  with the schemas.
+- **`workpaper` schema** (`schema/v0.1/workpaper.schema.json`): a documented
+  working file (lead schedule, reconciliation, supporting schedule, memo,
+  calculation, confirmation, checklist) with a sign-off lifecycle, preparer /
+  reviewer references, source documents, links to the request-list items it
+  depends on, and an optional recorded tie-out. A worked example ships in
+  `examples/v0.1/`, and both reference validators recognize the schema.
 - **JavaScript / Ajv validator** (`validator-js/`) so JS and Node teams can
   target the exact same schemas as the Python validator, with a matching CLI
   (`cpa-workpaper-validate`) and `node --test` suite.
-- **Conformance suite** (`conformance/`): a manifest-driven corpus of 23
-  valid/invalid fixtures plus a runner (`conformance/run.py`). Both the Python
-  and JavaScript validators run the same manifest, proving the two
-  implementations agree. Third parties can run the suite to demonstrate their
-  own implementation conforms.
+- **Conformance suite** (`conformance/`): a manifest-driven corpus of 27
+  valid/invalid fixtures (including workpaper cases) plus a runner
+  (`conformance/run.py`). Both the Python and JavaScript validators run the same
+  manifest, proving the two implementations agree. Third parties can run the
+  suite to demonstrate their own implementation conforms.
 - **Versioning and RFC process** doc (`docs/VERSIONING.md`) describing SemVer
   policy, side-by-side schema versions, and the lightweight change process.
 - A continuous-integration workflow (`.github/workflows/ci.yml`) that runs the

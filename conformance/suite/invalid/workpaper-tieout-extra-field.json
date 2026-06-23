@@ -1,0 +1,14 @@
+{
+  "specVersion": "0.1",
+  "id": "wp_bad_tieout",
+  "engagementId": "eng_min",
+  "title": "Unknown property in the tieOut object",
+  "kind": "supporting_schedule",
+  "status": "prepared",
+  "tieOut": {
+    "balance": { "amount": "100.00", "currency": "USD" },
+    "supportingTotal": { "amount": "100.00", "currency": "USD" },
+    "agrees": true,
+    "variance": "0.00"
+  }
+}

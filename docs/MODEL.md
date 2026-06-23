@@ -27,10 +27,13 @@ the shapes of the things those processes operate on.
 │  loop         │        │  comments        │         └──────────────────┘
 └───────────────┘        └──────────────────┘
 
-      ┌──────────────────────────┐
-      │   EngagementLetter        │  the structured contract terms
-      │   scope / fee / duties    │  (referenced by Engagement)
-      └──────────────────────────┘
+      ┌──────────────────────────┐     ┌──────────────────────────┐
+      │   EngagementLetter        │     │       Workpaper          │
+      │   scope / fee / duties    │     │  lead schedule / recon / │
+      │   (referenced by          │     │  memo, sign-off state,   │
+      │    Engagement)            │     │  sources, optional       │
+      └──────────────────────────┘     │  tie-out                 │
+                                        └──────────────────────────┘
 ```
 
 ## Engagement
@@ -43,6 +46,23 @@ carries a tax-prep workflow. The engagement owns the lifecycle `status` and the
 reporting `period`.
 
 Everything else points back at an engagement by `engagementId`.
+
+## Workpaper
+
+A **workpaper** is a single documented working file that supports a position
+taken in the engagement: a lead schedule, an account reconciliation, a
+supporting schedule, a memo, a calculation, a confirmation, or a checklist
+(`kind`). It carries its own sign-off lifecycle
+(`not_started -> in_progress -> prepared -> reviewed -> finalized`, with
+`reopened` for a finalized paper sent back), the `preparedBy` / `reviewedBy`
+people and timestamps, the `sources` it relies on, and the `requestItemIds`
+whose receipt it depends on, linking the client-side chase loop to the working
+file.
+
+A workpaper may also record a **tie-out**: the `balance` it supports, the
+`supportingTotal` of the detail behind it, and an `agrees` flag. As everywhere
+in the spec, these figures are *recorded, not derived*: the vocabulary carries
+the preparer's and reviewer's assertions, it does not compute or verify them.
 
 ## Close checklist (and the open-items loop)
 

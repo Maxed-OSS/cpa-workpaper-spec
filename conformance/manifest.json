@@ -14,6 +14,8 @@
     { "file": "suite/valid/letter-per-return.json", "schema": "engagement-letter", "expect": "valid", "note": "Per-return tax letter, signed." },
     { "file": "suite/valid/request-information.json", "schema": "request-list-item", "expect": "valid", "note": "Information request, still requested." },
     { "file": "suite/valid/request-signature.json", "schema": "request-list-item", "expect": "valid", "note": "Signature request with reminders." },
+    { "file": "suite/valid/workpaper-minimal.json", "schema": "workpaper", "expect": "valid", "note": "Only the six required fields." },
+    { "file": "suite/valid/workpaper-reviewed-tieout.json", "schema": "workpaper", "expect": "valid", "note": "Reviewed reconciliation with a tie-out and a linked request item." },
 
     { "file": "suite/invalid/engagement-missing-track.json", "schema": "engagement", "expect": "invalid", "note": "Required 'track' omitted." },
     { "file": "suite/invalid/engagement-bad-status.json", "schema": "engagement", "expect": "invalid", "note": "Status outside the enum." },
@@ -25,6 +27,8 @@
     { "file": "suite/invalid/letter-bad-currency.json", "schema": "engagement-letter", "expect": "invalid", "note": "Currency code fails the ISO 4217 pattern." },
     { "file": "suite/invalid/letter-empty-services.json", "schema": "engagement-letter", "expect": "invalid", "note": "servicesIncluded must have at least one item." },
     { "file": "suite/invalid/request-bad-itemType.json", "schema": "request-list-item", "expect": "invalid", "note": "itemType outside the enum." },
-    { "file": "suite/invalid/request-wrong-version.json", "schema": "request-list-item", "expect": "invalid", "note": "specVersion is not the const '0.1'." }
+    { "file": "suite/invalid/request-wrong-version.json", "schema": "request-list-item", "expect": "invalid", "note": "specVersion is not the const '0.1'." },
+    { "file": "suite/invalid/workpaper-bad-kind.json", "schema": "workpaper", "expect": "invalid", "note": "kind outside the enum." },
+    { "file": "suite/invalid/workpaper-tieout-extra-field.json", "schema": "workpaper", "expect": "invalid", "note": "Unknown property inside the tieOut object under additionalProperties:false." }
   ]
 }

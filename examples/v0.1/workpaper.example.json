@@ -1,0 +1,34 @@
+{
+  "specVersion": "0.1",
+  "id": "wp_cash_recon_may",
+  "engagementId": "eng_brightside_2025",
+  "reference": "A-1",
+  "title": "Operating account reconciliation - May",
+  "kind": "reconciliation",
+  "status": "reviewed",
+  "period": { "label": "2026-05", "start": "2026-05-01", "end": "2026-05-31" },
+  "preparedBy": { "id": "stf_jordan", "name": "Jordan Lee", "role": "preparer" },
+  "preparedAt": "2026-06-04T15:20:00Z",
+  "reviewedBy": { "id": "stf_morgan", "name": "Morgan Diaz", "role": "reviewer" },
+  "reviewedAt": "2026-06-06T13:05:00Z",
+  "tieOut": {
+    "balance": { "amount": "48210.55", "currency": "USD" },
+    "supportingTotal": { "amount": "48210.55", "currency": "USD" },
+    "agrees": true
+  },
+  "sources": [
+    {
+      "id": "att_bank_stmt_may",
+      "filename": "operating-statement-2026-05.pdf",
+      "contentType": "application/pdf"
+    }
+  ],
+  "requestItemIds": ["rli_may_bank_stmt"],
+  "notes": [
+    {
+      "author": { "id": "stf_morgan", "name": "Morgan Diaz", "role": "reviewer" },
+      "body": "Two outstanding checks cleared in early June; reconciling items agree to the cutoff statement.",
+      "createdAt": "2026-06-06T13:04:00Z"
+    }
+  ]
+}

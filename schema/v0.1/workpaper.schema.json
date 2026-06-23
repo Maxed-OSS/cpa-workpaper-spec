@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cpa-workpaper-spec.org/schema/v0.1/workpaper.schema.json",
+  "title": "Workpaper",
+  "description": "A workpaper is a documented working file that supports a position taken in an engagement - for example a lead schedule, an account reconciliation, a tax-position memo, or a supporting calculation. It records what the file is, who prepared and reviewed it, its sign-off state, the source documents it relies on, and an optional tie-out figure. This is a vocabulary for describing and exchanging workpapers, not a computation engine: the figures it carries are recorded, not derived by the spec.",
+  "type": "object",
+  "properties": {
+    "specVersion": { "$ref": "common.schema.json#/$defs/specVersion" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "engagementId": {
+      "$ref": "common.schema.json#/$defs/id",
+      "description": "Identifier of the engagement this workpaper belongs to."
+    },
+    "reference": {
+      "type": "string",
+      "description": "Short index reference for the workpaper within the engagement file, e.g. \"A-1\", \"1100\", \"B.3\". Indexing schemes are firm-specific; the spec only carries the label.",
+      "maxLength": 64
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable title, e.g. \"Cash lead schedule\", \"Operating account reconciliation - May\".",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "kind": {
+      "type": "string",
+      "description": "The nature of the workpaper. Firm-agnostic vocabulary; use 'other' plus the title for anything outside this list.",
+      "enum": [
+        "lead_schedule",
+        "reconciliation",
+        "supporting_schedule",
+        "memo",
+        "calculation",
+        "confirmation",
+        "checklist",
+        "other"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "description": "Sign-off lifecycle of the workpaper. The canonical flow is not_started -> in_progress -> prepared -> reviewed -> finalized; 'reopened' marks a finalized paper sent back for changes.",
+      "enum": [
+        "not_started",
+        "in_progress",
+        "prepared",
+        "reviewed",
+        "finalized",
+        "reopened"
+      ]
+    },
+    "period": {
+      "$ref": "common.schema.json#/$defs/fiscalPeriod",
+      "description": "The reporting period the workpaper covers, when narrower than the engagement period."
+    },
+    "preparedBy": {
+      "$ref": "common.schema.json#/$defs/personRef",
+      "description": "The person who prepared the workpaper."
+    },
+    "preparedAt": { "$ref": "common.schema.json#/$defs/isoDateTime" },
+    "reviewedBy": {
+      "$ref": "common.schema.json#/$defs/personRef",
+      "description": "The person who reviewed and signed off the workpaper. Present once status reaches reviewed or beyond."
+    },
+    "reviewedAt": { "$ref": "common.schema.json#/$defs/isoDateTime" },
+    "tieOut": {
+      "type": "object",
+      "description": "An optional record of the amount this workpaper ties out to (for example the balance a reconciliation agrees to) and whether the two sides agree. The spec records the figures and the flag; it does not compute or verify them.",
+      "properties": {
+        "balance": {
+          "$ref": "common.schema.json#/$defs/money",
+          "description": "The amount the workpaper supports (e.g. the per-books or per-statement balance)."
+        },
+        "supportingTotal": {
+          "$ref": "common.schema.json#/$defs/money",
+          "description": "The total of the supporting detail being tied to the balance."
+        },
+        "agrees": {
+          "type": "boolean",
+          "description": "Whether the two figures agree, as asserted by the preparer/reviewer. Recorded, not derived."
+        }
+      },
+      "additionalProperties": false
+    },
+    "sources": {
+      "type": "array",
+      "description": "Source documents the workpaper relies on (statements, exports, prior-year papers).",
+      "items": { "$ref": "common.schema.json#/$defs/attachmentRef" }
+    },
+    "requestItemIds": {
+      "type": "array",
+      "description": "Identifiers of request-list items whose receipt this workpaper depends on, linking the client-side chase loop to the working file.",
+      "items": { "$ref": "common.schema.json#/$defs/id" }
+    },
+    "notes": {
+      "type": "array",
+      "description": "Free-text annotations and review points on the workpaper.",
+      "items": { "$ref": "common.schema.json#/$defs/note" }
+    }
+  },
+  "required": ["specVersion", "id", "engagementId", "title", "kind", "status"],
+  "additionalProperties": false
+}

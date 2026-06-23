@@ -3,20 +3,26 @@
 [![ci](https://github.com/maxed-oss/cpa-workpaper-spec/actions/workflows/ci.yml/badge.svg)](https://github.com/maxed-oss/cpa-workpaper-spec/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-An open, versioned **vocabulary** for the common units of CPA work - expressed as
-JSON Schema (draft 2020-12) plus a small OpenAPI description.
+Open JSON Schema and OpenAPI vocabulary for CPA engagements, close checklists,
+tax prep stages, engagement letters, and request list items.
 
 It defines firm-agnostic shapes for:
 
 - **Engagement** - a bounded body of client work over a period.
+- **Workpaper** - a documented working file (lead schedule, reconciliation,
+  memo, calculation) with its sign-off state, sources, and an optional tie-out.
 - **Monthly-close checklist** - close tasks plus the *open-items loop*.
 - **Tax-prep stage model** - an ordered return-preparation workflow.
 - **Engagement-letter config** - structured scope / fee / responsibility terms.
 - **Request-list item** - a single "prepared by client" (PBC) request.
 
-This is an **interoperability spec, not an engine.** It standardizes how to
-*describe* these things so two systems can exchange them. It does not compute
-taxes, reconcile ledgers, or run any workflow.
+This interoperability spec standardizes how to *describe* these things so two
+systems can exchange them.
+
+The normative rules (document, producer, consumer, and validator conformance,
+using RFC 2119 keywords) are in [`SPEC.md`](SPEC.md); the JSON Schema files are
+their machine-readable form, and the [conformance suite](conformance) is their
+runnable definition.
 
 ## Why
 
@@ -33,9 +39,11 @@ your tax tool both speak it, they interoperate for free.
 ## What's in here
 
 ```
-schema/v0.1/            JSON Schema (draft 2020-12) - the normative spec
+SPEC.md                 Normative spec text (conformance rules, RFC 2119)
+schema/v0.1/            JSON Schema (draft 2020-12) - machine-readable rules
   common.schema.json        shared $defs (money, dates, person refs, …)
   engagement.schema.json
+  workpaper.schema.json
   close-checklist.schema.json
   tax-prep.schema.json
   engagement-letter.schema.json
@@ -92,7 +100,7 @@ List the known schema names:
 
 ```bash
 python3 validator/validate.py --list-schemas
-# engagement, close-checklist, tax-prep, engagement-letter, request-list-item, common
+# close-checklist, common, engagement, engagement-letter, request-list-item, tax-prep, workpaper
 ```
 
 The validator resolves all cross-schema `$ref`s **offline** - no network access

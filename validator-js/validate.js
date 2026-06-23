@@ -29,6 +29,7 @@ const EXAMPLE_TO_SCHEMA = {
   "tax-prep.example.json": "tax-prep",
   "engagement-letter.example.json": "engagement-letter",
   "request-list-item.example.json": "request-list-item",
+  "workpaper.example.json": "workpaper",
 };
 
 function readJson(filePath) {

@@ -1,0 +1,8 @@
+{
+  "specVersion": "0.1",
+  "id": "wp_bad_kind",
+  "engagementId": "eng_min",
+  "title": "Kind outside the enum",
+  "kind": "spreadsheet",
+  "status": "in_progress"
+}

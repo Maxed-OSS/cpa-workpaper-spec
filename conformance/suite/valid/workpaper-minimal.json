@@ -1,0 +1,8 @@
+{
+  "specVersion": "0.1",
+  "id": "wp_min",
+  "engagementId": "eng_min",
+  "title": "Cash lead schedule",
+  "kind": "lead_schedule",
+  "status": "not_started"
+}
