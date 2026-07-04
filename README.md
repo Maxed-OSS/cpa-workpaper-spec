@@ -206,6 +206,15 @@ Issues and pull requests are welcome. Please:
 See [`docs/VERSIONING.md`](docs/VERSIONING.md) for the change (RFC) process and
 how the spec is versioned.
 
+## Agent interface
+
+For AI agents and automation: `python validator/validate.py - --schema <name>
+--json` reads a document on stdin and prints `{ok, valid, schema, document,
+errors}`; exit codes are stable (`0` valid, `1` invalid, `2` usage/input
+error). The full machine interface is in [AGENT.md](AGENT.md) and
+[llms.txt](llms.txt). The validator backs the `validate_workpaper` tool in
+[maxed-mcp](https://github.com/maxed-oss/maxed-mcp).
+
 ## License
 
 [Apache-2.0](LICENSE). See [`NOTICE`](NOTICE).

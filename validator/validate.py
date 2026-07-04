@@ -11,14 +11,22 @@ the on-disk schema, so ``$ref``s resolve without any network access.
 Usage:
     validate.py <document.json> --schema <schema-name>
     validate.py <document.json> --schema engagement
+    validate.py - --schema engagement       # read the document from stdin
     validate.py --all                 # validate every bundled example
     validate.py --list-schemas
+    validate.py - --schema engagement --json # machine-readable result
 
 Schema names are the schema filenames without the ``.schema.json`` suffix, e.g.
 ``engagement``, ``close-checklist``, ``tax-prep``, ``engagement-letter``,
 ``request-list-item``.
 
-Exit code is 0 when every requested validation passes, 1 otherwise.
+With ``--json`` the tool prints a single JSON object describing the result
+instead of the human-readable ``OK``/``FAIL`` lines, which is the shape an
+agent or MCP server consumes.
+
+Exit codes are stable: ``0`` when every requested validation passes, ``1`` when
+any document is invalid, and ``2`` on a usage or input error (missing file,
+unreadable JSON, missing dependency).
 """
 from __future__ import annotations
 
@@ -117,32 +125,81 @@ def _print_result(label: str, errors: list[str]) -> None:
         print(f"OK    {label}")
 
 
-def validate_one(args: argparse.Namespace, schemas: dict[str, dict], store: "Registry") -> int:
-    doc_path = Path(args.document)
+def _load_document(source: str) -> dict:
+    """Load a JSON document from a path or, when ``source`` is ``-``, stdin."""
+    if source == "-":
+        return json.load(sys.stdin)
+    doc_path = Path(source)
     if not doc_path.exists():
-        sys.stderr.write(f"error: document not found: {doc_path}\n")
-        return 1
+        raise FileNotFoundError(f"document not found: {doc_path}")
     with doc_path.open(encoding="utf-8") as fh:
-        document = json.load(fh)
+        return json.load(fh)
+
+
+def validate_one(args: argparse.Namespace, schemas: dict[str, dict], store: "Registry") -> int:
+    name = "<stdin>" if args.document == "-" else Path(args.document).name
+    try:
+        document = _load_document(args.document)
+    except FileNotFoundError as exc:
+        if args.json:
+            print(json.dumps({"ok": False, "error": {"type": "input_error", "message": str(exc)}}))
+        else:
+            sys.stderr.write(f"error: {exc}\n")
+        return 2
+    except json.JSONDecodeError as exc:
+        msg = f"invalid JSON in {name}: {exc}"
+        if args.json:
+            print(json.dumps({"ok": False, "error": {"type": "input_error", "message": msg}}))
+        else:
+            sys.stderr.write(f"error: {msg}\n")
+        return 2
+
     errors = validate_document(document, args.schema, schemas, store)
-    _print_result(f"{doc_path.name} against '{args.schema}'", errors)
+    if args.json:
+        print(
+            json.dumps(
+                {
+                    "ok": not errors,
+                    "valid": not errors,
+                    "schema": args.schema,
+                    "document": name,
+                    "errors": errors,
+                },
+                indent=2,
+            )
+        )
+    else:
+        _print_result(f"{name} against '{args.schema}'", errors)
     return 1 if errors else 0
 
 
-def validate_all(schemas: dict[str, dict], store: "Registry") -> int:
+def validate_all(schemas: dict[str, dict], store: "Registry", as_json: bool = False) -> int:
     rc = 0
+    results: list[dict] = []
     for example_name, schema_name in EXAMPLE_TO_SCHEMA.items():
         path = EXAMPLE_DIR / example_name
         if not path.exists():
-            print(f"FAIL  {example_name} (missing example file)")
             rc = 1
+            results.append(
+                {"document": example_name, "schema": schema_name, "valid": False,
+                 "errors": ["missing example file"]}
+            )
+            if not as_json:
+                print(f"FAIL  {example_name} (missing example file)")
             continue
         with path.open(encoding="utf-8") as fh:
             document = json.load(fh)
         errors = validate_document(document, schema_name, schemas, store)
-        _print_result(f"{example_name} against '{schema_name}'", errors)
+        results.append(
+            {"document": example_name, "schema": schema_name, "valid": not errors,
+             "errors": errors}
+        )
+        if not as_json:
+            _print_result(f"{example_name} against '{schema_name}'", errors)
         if errors:
             rc = 1
+    if as_json:
+        print(json.dumps({"ok": rc == 0, "results": results}, indent=2))
     return rc
 
 
@@ -152,18 +209,25 @@ def main(argv: Iterable[str] | None = None) -> int:
     parser.add_argument("--schema", help="Schema name to validate against (e.g. 'engagement').")
     parser.add_argument("--all", action="store_true", help="Validate every bundled example.")
     parser.add_argument("--list-schemas", action="store_true", help="List known schema names and exit.")
+    parser.add_argument(
+        "--json", action="store_true",
+        help="Emit a machine-readable JSON result instead of OK/FAIL lines.",
+    )
     args = parser.parse_args(list(argv) if argv is not None else None)
 
     schemas = load_schemas()
     store = build_store(schemas)
 
     if args.list_schemas:
-        for name in list_schema_names(schemas):
-            print(name)
+        if args.json:
+            print(json.dumps({"ok": True, "schemas": list_schema_names(schemas)}, indent=2))
+        else:
+            for name in list_schema_names(schemas):
+                print(name)
         return 0
 
     if args.all:
-        return validate_all(schemas, store)
+        return validate_all(schemas, store, as_json=args.json)
 
     if not args.document or not args.schema:
         parser.error("provide a document and --schema, or use --all / --list-schemas")

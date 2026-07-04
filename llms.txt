@@ -1,0 +1,27 @@
+# cpa-workpaper-spec
+
+> Open JSON Schema (draft 2020-12) and OpenAPI vocabulary for CPA engagements:
+> engagements, workpapers, monthly-close checklists with the open-items loop,
+> tax-prep stage models, engagement-letter config, and request-list (PBC) items.
+> A firm-agnostic interchange spec for describing this work so two systems can
+> exchange it. Normative rules in SPEC.md; schemas in schema/v0.1/.
+
+Validator: `python validator/validate.py` (needs `pip install -r requirements.txt`).
+
+## Validator CLI
+
+- `validate.py <doc.json|-> --schema <name> [--json]` : validate one document (stdin with `-`).
+- `validate.py --all [--json]` : validate every bundled example.
+- `validate.py --list-schemas [--json]` : list known schema names.
+- Schema names: engagement, workpaper, close-checklist, tax-prep, engagement-letter, request-list-item.
+
+## JSON output and exit codes
+
+- `--json` on a single doc: `{ok, valid, schema, document, errors}`.
+- Exit codes: 0 all valid, 1 a document is invalid, 2 usage/input error.
+
+## Agent notes
+
+- Fully offline; deterministic. There is also a JavaScript/Ajv validator in `validator-js/`.
+- Backs the `validate_workpaper` tool in maxed-mcp (set CPA_WORKPAPER_SPEC_DIR).
+- See AGENT.md for the full machine interface.
